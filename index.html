@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shoe Store</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#f5f5f5;
+color:#222;
+}
+
+header{
+background:#111;
+color:#fff;
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+position:sticky;
+top:0;
+z-index: 100;
+}
+
+header h1{
+font-size:28px;
+}
+
+.cart{
+font-size:18px;
+background:#fff;
+color:#111;
+padding:10px 18px;
+border-radius:30px;
+font-weight:bold;
+}
+
+.hero{
+height:300px;
+background:linear-gradient(135deg,#111,#444);
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+text-align:center;
+}
+
+.hero h2{
+font-size:42px;
+}
+
+.products{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:25px;
+padding:40px;
+}
+
+.card{
+background:white;
+border-radius:15px;
+overflow:hidden;
+box-shadow:0 10px 20px rgba(0,0,0,.15);
+transition:.3s;
+}
+
+.card:hover{
+transform:translateY(-8px);
+}
+
+.card img{
+width:100%;
+height:220px;
+object-fit:cover;
+}
+
+.info{
+padding:20px;
+}
+
+.info h3{
+margin-bottom:10px;
+}
+
+.price{
+font-size:24px;
+font-weight:bold;
+color:#0a7d00;
+margin:15px 0;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#111;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#444;
+}
+
+footer{
+background:#111;
+color:white;
+text-align:center;
+padding:20px;
+margin-top:30px;
+}
+
+/* ==========================================================================
+   ستایلی فۆرمی پاسۆردی سادە
+   ========================================================================== */
+#passwordModal {
+display: none;
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.85);
+z-index: 99999;
+justify-content: center;
+align-items: center;
+}
+
+.password-box {
+background: #2a2a2a; 
+padding: 30px;
+border: 1px solid #ff2b2b;
+border-radius: 4px;
+text-align: center;
+width: 280px;
+box-shadow: 0 0 25px rgba(255, 0, 0, 0.2);
+}
+
+.password-box label {
+display: block;
+color: #ffffff;
+font-size: 14px;
+margin-bottom: 12px;
+font-weight: bold;
+text-transform: uppercase;
+letter-spacing: 2px;
+}
+
+.password-box input {
+width: 100%;
+padding: 10px;
+margin-bottom: 15px;
+border: 1px solid #444;
+background: #111;
+color: #ff2b2b;
+outline: none;
+text-align: center;
+font-family: monospace;
+}
+
+.password-box .forgot-link {
+display: block;
+color: #777; 
+font-size: 11px;
+text-decoration: none;
+margin-top: 15px;
+cursor: pointer;
+text-transform: uppercase;
+letter-spacing: 1px;
+}
+
+.password-box .forgot-link:hover {
+color: #ff2b2b;
+text-decoration: underline;
+}
+
+/* ==========================================================================
+   ستایلی وێبسایتی یەکەم (مردن)
+   ========================================================================== */
+#hiddenWebsiteOverlay {
+display: none;
+position: fixed;
+inset: 0;
+background: #000000;
+z-index: 999999;
+overflow: hidden;
+direction: rtl; 
+}
+
+.bg {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(120,0,0,0.25), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,0.9) 0px, rgba(0,0,0,0.9) 2px, rgba(10,0,0,0.95) 3px, rgba(0,0,0,0.9) 4px);
+  animation: flicker 4s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  5% { opacity: 0.85; }
+  10% { opacity: 1; }
+  45% { opacity: 0.9; }
+  50% { opacity: 1; }
+  72% { opacity: 0.8; }
+  73% { opacity: 1; }
+}
+
+.scan {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,0,0,0.03) 0px,
+    rgba(255,0,0,0.03) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 5;
+}
+
+.drip {
+  position: fixed;
+  top: -50px;
+  width: 6px;
+  background: linear-gradient(to bottom, transparent, #7a0000 20%, #b30000 60%, #ff1a1a 100%);
+  border-radius: 0 0 50% 50%;
+  filter: drop-shadow(0 0 4px #a00000);
+  z-index: 3;
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fall {
+  0%   { transform: translateY(0) scaleY(1); opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateY(110vh) scaleY(1.4); opacity: 0; }
+}
+
+.noise {
+  position: fixed;
+  inset: 0;
+  z-index: 4;
+  opacity: 0.05;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.glitch-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.glitch-cluster {
+  position: absolute;
+  display: flex;
+  gap: 2px;
+  opacity: 0;
+  animation: clusterFade linear infinite;
+}
+
+.glitch-digit {
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: rgba(255, 40, 40, 0.55);
+  text-shadow: 0 0 6px rgba(255, 0, 0, 0.6);
+  letter-spacing: 1px;
+}
+
+@keyframes clusterFade {
+  0%   { opacity: 0; }
+  8%   { opacity: 1; }
+  80%  { opacity: 1; }
+  92%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  padding: 34px;
+  background: rgba(20, 0, 0, 0.25);
+  backdrop-filter: blur(6px) saturate(140%);
+  -webkit-backdrop-filter: blur(6px) saturate(140%);
+  border: 1px solid rgba(255, 30, 30, 0.35);
+  border-radius: 16px;
+  box-shadow:
+    0 0 40px rgba(200, 0, 0, 0.35),
+    inset 0 0 60px rgba(120, 0, 0, 0.25);
+  animation: pulseGlow 2.6s ease-in-out infinite;
+  transition: transform 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel.shake {
+  animation: pulseGlow 2.6s ease-in-out infinite, shake 0.4s ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(-50%, -50%) translateX(0); }
+  20% { transform: translate(-50%, -50%) translateX(-8px); }
+  40% { transform: translate(-50%, -50%) translateX(8px); }
+  60% { transform: translate(-50%, -50%) translateX(-6px); }
+  80% { transform: translate(-50%, -50%) translateX(6px); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 40px rgba(200,0,0,0.35), inset 0 0 60px rgba(120,0,0,0.25); }
+  50%      { box-shadow: 0 0 75px rgba(255,20,20,0.55), inset 0 0 90px rgba(150,0,0,0.35); }
+}
+
+#triggerView {
+  padding: 15px 30px;
+  cursor: pointer;
+}
+
+.word {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: #ff2b2b;
+  text-shadow:
+    0 0 10px #ff0000,
+    0 0 30px #b30000,
+    0 0 60px #7a0000;
+  animation: throb 1.8s ease-in-out infinite;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@keyframes throb {
+  0%, 100% { transform: scale(1); opacity: 0.92; }
+  50%      { transform: scale(1.06); opacity: 1; }
+}
+
+#puzzleView {
+  display: none;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.cell {
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  border-radius: 10px;
+  background: rgba(60, 0, 0, 0.35);
+  border: 1px solid rgba(255, 60, 60, 0.25);
+  color: rgba(255, 120, 120, 0.55);
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease, border-color 0.12s ease;
+}
+
+.cell.disabled {
+  cursor: default;
+}
+
+.cell.lit {
+  background: rgba(255, 20, 20, 0.55);
+  border-color: #ff5050;
+  color: #fff;
+  transform: scale(1.12);
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.8);
+}
+
+.cell.correct {
+  background: rgba(0, 140, 60, 0.5);
+  border-color: #3dff9e;
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.cell.wrong {
+  background: rgba(140, 0, 0, 0.7);
+  border-color: #ff0000;
+  transform: scale(0.9);
+}
+
+#successView {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.static-elv {
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  color: #8b0000; 
+  text-shadow: 
+    0 0 10px rgba(139, 0, 0, 0.6),
+    0 0 20px rgba(139, 0, 0, 0.3);
+  user-select: none;
+  -webkit-user-select: none;
+  margin-bottom: 5px;
+}
+
+.terminal-input {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(139, 0, 0, 0.5);
+  border-radius: 5px;
+  color: #ff1a1a;
+  font-family: 'Courier New', monospace;
+  font-size: 16px;
+  padding: 8px 15px;
+  text-align: center;
+  outline: none;
+  width: 140px;
+  box-shadow: 0 0 15px rgba(139, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.terminal-input:focus {
+  border-color: #ff1a1a;
+  box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+}
+
+.submit-btn {
+  background: #5c0000;
+  border: 1px solid #8b0000;
+  color: #ffb3b3;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(139, 0, 0, 0.3);
+  transition: all 0.2s ease;
+  margin-top: 5px;
+}
+
+.submit-btn:hover {
+  background: #8b0000;
+  color: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+}
+
+.status-message {
+  font-size: 14px;
+  color: #ff1a1a;
+  text-shadow: 0 0 5px #ff0000;
+  min-height: 20px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* ==========================================================================
+   ستایلی یاری ماتریکسی تاریک نوێ (Cyber Matrix Hack - REWRITTEN)
+   ========================================================================== */
+#puzzleGameOverlay {
+display: none;
+position: fixed;
+inset: 0;
+background: #000;
+z-index: 999999;
+overflow: hidden;
+-webkit-user-select: none;
+user-select: none;
+font-family: 'Courier New', monospace;
+}
+#matrixCanvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  display: block;
+}
+#stage {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.cyber-panel {
+  background: rgba(5, 0, 0, 0.85);
+  border: 2px solid #ff1a1a;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 0 35px rgba(255, 0, 0, 0.4);
+  text-align: center;
+  max-width: 420px;
+  width: 100%;
+}
+.cyber-header {
+  color: #ff1a1a;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px #ff0000;
+}
+.cyber-desc {
+  color: #888;
+  font-size: 11px;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+#cyberBoard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 0 auto 20px auto;
+  max-width: 320px;
+}
+.cyber-node {
+  height: 65px;
+  background: rgba(20, 0, 0, 0.6);
+  border: 1px solid #400000;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.cyber-node.active-flash {
+  background: #ff1a1a !important;
+  color: #fff !important;
+  border-color: #fff !important;
+  box-shadow: 0 0 25px #ff0000;
+  text-shadow: 0 0 5px #fff;
+}
+.cyber-node.hacked-success {
+  background: rgba(0, 50, 0, 0.4);
+  border-color: #00ff00;
+  color: #00ff00;
+  text-shadow: 0 0 8px #00ff00;
+}
+#restartBtn {
+  position: fixed;
+  top: max(14px, env(safe-area-inset-top));
+  right: max(14px, env(safe-area-inset-right));
+  z-index: 10;
+  width: 46px;
+  height: 46px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 40, 40, 0.4);
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+#restartBtn svg {
+  width: 22px;
+  height: 22px;
+  stroke: #ff3333;
+}
+#winGlow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 6;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  box-shadow: inset 0 0 0 0 rgba(255,0,0,0);
+}
+#winGlow.show {
+  opacity: 1;
+  box-shadow: inset 0 0 150px 30px rgba(255, 0, 0, 0.4);
+}
+.screen-shake {
+  animation: extremeShake 0.4s ease-in-out;
+}
+@keyframes extremeShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-12px) rotate(-1deg); }
+  40% { transform: translateX(12px) rotate(1deg); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(8px); }
+}
+</style>
+
+</head>
+<body>
+
+<header>
+<h1>👟 Shoe Store</h1>
+<div class="cart">
+🛒 Cart: <span id="cart">0</span>
+</div>
+</header>
+
+<section class="hero">
+<div>
+<h2>Modern Shoes Collection</h2>
+<p>High Quality - Best Price</p>
+</div>
+</section>
+
+<section class="products">
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800" alt="">
+<div class="info">
+<h3>Nike Air Max</h3>
+<div class="price">$120</div>
+<button onclick="add()">Add To Cart</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1543508282-6319a3e2621f?w=800" alt="">
+<div class="info">
+<h3>Adidas Ultra Boost</h3>
+<div class="price">$145</div>
+<button onclick="triggerSecretWebsite()">Add To Cart</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=800" alt="">
+<div class="info">
+<h3>Puma RS-X</h3>
+<div class="price">$95</div>
+<button onclick="showPasswordBox()">Add To Cart</button>
+</div>
+</div>
+
+<div class="card">
+<img src="https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=800" alt="">
+<div class="info">
+<h3>New Balance 550</h3>
+<div class="price">$110</div>
+<button onclick="add()">Add To Cart</button>
+</div>
+</div>
+
+</section>
+
+<footer>
+©️ 2026 Shoe Store - Demo Website
+</footer>
+
+<!-- فۆرمی ناردنی پاسۆرد -->
+<div id="passwordModal">
+  <div class="password-box">
+    <label>Enter Password</label>
+    <input type="password" id="modalPasswordInput" autocomplete="off">
+    <span class="forgot-link" onclick="openPuzzleGame()">forgot password</span>
+  </div>
+</div>
+
+<!-- وێبسایتی یەکەم (مردن) -->
+<div id="hiddenWebsiteOverlay">
+  <div class="bg"></div>
+  <div class="noise"></div>
+  <div class="scan"></div>
+  <div id="glitchLayer" class="glitch-layer"></div>
+
+  <div class="panel" id="panel">
+    <div id="triggerView">
+      <p class="word">مردن</p>
+    </div>
+
+    <div id="puzzleView">
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <div id="successView">
+      <span class="static-elv">elv</span>
+      <input type="text" id="passInput" class="terminal-input" placeholder="کۆدەکە بنووسە..." autocomplete="off" />
+      <button id="submitBtn" class="submit-btn">تاقیکرمانەوە</button>
+      <div id="status" class="status-message"></div>
+    </div>
+  </div>
+</div>
+
+<!-- وێبسایتی یاری ماتریکسی تاریک نوێ -->
+<div id="puzzleGameOverlay">
+  <canvas id="matrixCanvas"></canvas>
+
+  <button id="restartBtn">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a9 9 0 1 1-2.64-6.36"></path>
+      <polyline points="21 3 21 9 15 9"></polyline>
+    </svg>
+  </button>
+
+  <div id="winGlow"></div>
+
+  <div id="stage">
+    <div class="cyber-panel" id="cyberPanel">
+      <div class="cyber-header">SYSTEM DECRYPTION</div>
+      <div class="cyber-desc">MEMORIZE AND ACCESS THE SHOWN SEQUENCE</div>
+      <div id="cyberBoard"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+let cart=0;
+function add(){
+  cart++;
+  document.getElementById("cart").innerText=cart;
+}
+
+function showPasswordBox() {
+  const modal = document.getElementById('passwordModal');
+  const input = document.getElementById('modalPasswordInput');
+  modal.style.display = 'flex';
+  input.value = '';
+  input.focus();
+}
+
+document.getElementById('modalPasswordInput').addEventListener('input', function() {
+  if (this.value.trim() === 'morth') {
+    document.getElementById('passwordModal').style.display = 'none';
+    window.location.href = "https://morthai.lovable.app/c/56f4d0aa-ef8e-48b7-bf44-8236d27beef0";
+  }
+});
+
+function openPuzzleGame() {
+  document.getElementById('passwordModal').style.display = 'none';
+  document.getElementById('puzzleGameOverlay').style.display = 'block';
+  initMatrixGame(); 
+}
+
+// لۆجیکی وێبسایتی یەکەم (مردن)
+const TARGET_URL = "https://kurdhack.lovable.app/unlock";
+const FORGOT_TARGET_URL = "https://morthai.lovable.app/c/56f4d0aa-ef8e-48b7-bf44-8236d27beef0";
+const SYMBOLS = ["▲", "◆", "●", "■", "✕", "▶️", "◀️", "⬢", "✦"];
+const SEQUENCE_LENGTH = 6;
+const FLASH_ON = 420;
+const FLASH_GAP = 160;
+
+const panelEl = document.getElementById('panel');
+const triggerView = document.getElementById('triggerView');
+const puzzleView = document.getElementById('puzzleView');
+const successView = document.getElementById('successView');
+const gridEl = document.getElementById('grid');
+
+let sequence = [];
+let userIndex = 0;
+let accepting = false;
+let cells = [];
+
+function triggerSecretWebsite() {
+  document.getElementById('hiddenWebsiteOverlay').style.display = 'block';
+  startDrips();
+  startGlitchDigits();
+}
+
+function startDrips() {
+  const dripCount = 22;
+  for (let i = 0; i < dripCount; i++) {
+    const d = document.createElement('div');
+    d.className = 'drip';
+    d.style.left = Math.random() * 100 + 'vw';
+    d.style.height = 40 + Math.random() * 90 + 'px';
+    d.style.animationDuration = 2.5 + Math.random() * 3.5 + 's';
+    d.style.animationDelay = Math.random() * 5 + 's';
+    document.getElementById('hiddenWebsiteOverlay').appendChild(d);
+  }
+}
+
+function startGlitchDigits() {
+  const TARGET_DIGITS = "0709".split("");
+  const glitchLayer = document.getElementById('glitchLayer');
+  const clusterCount = 9;
+
+  for (let c = 0; c < clusterCount; c++) {
+    const cluster = document.createElement('div');
+    cluster.className = 'glitch-cluster';
+    cluster.style.top = (Math.random() * 92) + 'vh';
+    cluster.style.left = (Math.random() * 88) + 'vw';
+    cluster.style.animationDuration = 5 + Math.random() * 6 + 's';
+    cluster.style.animationDelay = Math.random() * 8 + 's';
+
+    const digits = [...TARGET_DIGITS].sort(() => Math.random() - 0.5);
+    digits.forEach((realDigit) => {
+      const span = document.createElement('span');
+      span.className = 'glitch-digit';
+      span.textContent = realDigit;
+      cluster.appendChild(span);
+      
+      function tick() {
+        span.textContent = Math.random() < 0.18 ? realDigit : Math.floor(Math.random() * 10);
+        setTimeout(tick, 45 + Math.random() * 90);
+      }
+      setTimeout(tick, Math.random() * 300);
+    });
+    glitchLayer.appendChild(cluster);
+  }
+}
+
+function buildGrid() {
+  gridEl.innerHTML = '';
+  cells = SYMBOLS.map((sym, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'cell disabled';
+    cell.textContent = sym;
+    cell.addEventListener('click', () => onCellClick(i));
+    gridEl.appendChild(cell);
+    return cell;
+  });
+}
+
+function randomSequence() {
+  const seq = [];
+  for (let i = 0; i < SEQUENCE_LENGTH; i++) {
+    seq.push(Math.floor(Math.random() * SYMBOLS.length));
+  }
+  return seq;
+}
+
+function sleep(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+async function playSequence() {
+  accepting = false;
+  cells.forEach(c => c.classList.add('disabled'));
+  await sleep(400);
+  for (const idx of sequence) {
+    cells[idx].classList.add('lit');
+    await sleep(FLASH_ON);
+    cells[idx].classList.remove('lit');
+    await sleep(FLASH_GAP);
+  }
+  userIndex = 0;
+  accepting = true;
+  cells.forEach(c => c.classList.remove('disabled'));
+}
+
+function onCellClick(i) {
+  if (!accepting) return;
+  if (i === sequence[userIndex]) {
+    cells[i].classList.add('correct');
+    setTimeout(() => cells[i].classList.remove('correct'), 200);
+    userIndex++;
+    if (userIndex >= sequence.length) {
+      accepting = false;
+      onSuccess();
+    }
+  } else {
+    cells[i].classList.add('wrong');
+    accepting = false;
+    panelEl.classList.add('shake');
+    setTimeout(() => {
+      cells[i].classList.remove('wrong');
+      panelEl.classList.remove('shake');
+      playSequence();
+    }, 500);
+  }
+}
+
+function startPuzzle() {
+  triggerView.style.display = 'none';
+  puzzleView.style.display = 'block';
+  buildGrid();
+  sequence = randomSequence();
+  playSequence();
+}
+
+function onSuccess() {
+  puzzleView.style.display = 'none';
+  successView.style.display = 'flex';
+  const passInput = document.getElementById('passInput');
+  const submitBtn = document.getElementById('submitBtn');
+  const statusDiv = document.getElementById('status');
+  passInput.focus();
+
+  submitBtn.addEventListener('click', function() {
+    if (passInput.value.trim().toLowerCase() === "vel") {
+      statusDiv.textContent = ""; 
+      setTimeout(() => { window.location.href = TARGET_URL; }, 1000); 
+    } else {
+      statusDiv.textContent = "Error"; 
+    }
+  });
+}
+triggerView.addEventListener('click', startPuzzle);
+
+
+/* ==========================================================================
+   لۆجیکی نوێی یاری هاککردنی تەرکیز و ماتریکسی ترسناک
+   ========================================================================== */
+function initMatrixGame() {
+  const canvas = document.getElementById('matrixCanvas');
+  const ctx = canvas.getContext('2d');
+  let w, h, cols, drops;
+  const chars = "010101SYSTEMFAILUREERROR777".split('');
+  const fontSize = 14;
+
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    cols = Math.floor(w / fontSize);
+    drops = new Array(cols).fill(0).map(() => Math.random() * -100);
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function draw() {
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.font = fontSize + 'px monospace';
+    for (let i = 0; i < cols; i++) {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillStyle = Math.random() > 0.98 ? '#ffffff' : 'rgba(150, 0, 0, 0.6)';
+      ctx.fillText(ch, i * fontSize, drops[i] * fontSize);
+      if (drops[i] * fontSize > h && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  const boardEl = document.getElementById('cyberBoard');
+  const panelEl = document.getElementById('cyberPanel');
+  const winGlow = document.getElementById('winGlow');
+  const restartBtn = document.getElementById('restartBtn');
+
+  const GRID_SIZE = 16; 
+  const TARGET_LEN = 5; 
+  let targetSeq = [];
+  let currentInput = [];
+  let gameRunning = false;
+  let blockClicks = true;
+
+  const HEX_CODES = ["0x4F", "0x9A", "0xBC", "0xDE", "0x12", "0x78", "0xFE", "0xAA", "0x55", "0x8B", "0x3C", "0x6E", "0xD1", "0xE4", "0x2B", "0x9C"];
+
+  function createBoard() {
+    boardEl.innerHTML = '';
+    for (let i = 0; i < GRID_SIZE; i++) {
+      const node = document.createElement('div');
+      node.className = 'cyber-node';
+      node.textContent = HEX_CODES[i];
+      node.dataset.index = i;
+      node.addEventListener('click', () => handleNodeClick(i, node));
+      boardEl.appendChild(node);
+    }
+  }
+
+  function startNewGame() {
+    createBoard();
+    targetSeq = [];
+    currentInput = [];
+    winGlow.classList.remove('show');
+    blockClicks = true;
+    gameRunning = true;
+
+    while(targetSeq.length < TARGET_LEN){
+      let r = Math.floor(Math.random() * GRID_SIZE);
+      if(!targetSeq.includes(r)) targetSeq.push(r);
+    }
+
+    setTimeout(flashSequence, 1200);
+  }
+
+  async function flashSequence() {
+    const nodes = boardEl.children;
+    for (let i = 0; i < targetSeq.length; i++) {
+      let idx = targetSeq[i];
+      nodes[idx].classList.add('active-flash');
+      await new Promise(r => setTimeout(r, 600));
+      nodes[idx].classList.remove('active-flash');
+      await new Promise(r => setTimeout(r, 250));
+    }
+    blockClicks = false;
+  }
+
+  function handleNodeClick(index, nodeEl) {
+    if (blockClicks || !gameRunning) return;
+
+    if (index === targetSeq[currentInput.length]) {
+      nodeEl.classList.add('hacked-success');
+      currentInput.push(index);
+
+      if (currentInput.length === targetSeq.length) {
+        gameRunning = false;
+        winGlow.classList.add('show');
+        setTimeout(() => {
+          window.location.href = FORGOT_TARGET_URL;
+        }, 800);
+      }
+    } else {
+      blockClicks = true;
+      panelEl.classList.add('screen-shake');
+      nodeEl.style.background = '#ff0000';
+      nodeEl.style.color = '#fff';
+
+      setTimeout(() => {
+        panelEl.classList.remove('screen-shake');
+        startNewGame();
+      }, 600);
+    }
+  }
+
+  restartBtn.addEventListener('click', startNewGame);
+  startNewGame();
+}
+</script>
+
+</body>
+</html>
